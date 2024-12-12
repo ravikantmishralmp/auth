@@ -11,7 +11,7 @@ import {
   Alert,
 } from '@mui/material';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import axios from 'axios';
 
@@ -19,9 +19,10 @@ const theme = createTheme();
 
 interface SignUpProps {
   setLoginState?: (isSignedIn: boolean, isAdmin: boolean) => void;
+  onNavigate?: (location: { pathname: string }) => void;
 }
 
-const SignUp: React.FC<SignUpProps> = ({ setLoginState }) => {
+const SignUp: React.FC<SignUpProps> = ({ setLoginState, onNavigate }) => {
   const [formData, setFormData] = useState({
     firstName: '',
     lastName: '',
@@ -29,6 +30,7 @@ const SignUp: React.FC<SignUpProps> = ({ setLoginState }) => {
     password: '',
   });
   const [error, setError] = useState<string | null>(null);
+  const navigate = useNavigate(); // Hook for navigation
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({
@@ -43,7 +45,15 @@ const SignUp: React.FC<SignUpProps> = ({ setLoginState }) => {
       const response = await axios.post('http://localhost:5001/signup', formData);
       console.log('SignUp::handleSubmit=' + JSON.stringify(response.data));
       const { token, isAdmin } = response.data;
-      if (setLoginState) setLoginState(true, isAdmin);
+      if (onNavigate) {
+        console.log('Sign up Navigate to parant:' + onNavigate);
+        onNavigate({ pathname: '/' });
+      } else {
+        navigate('/');
+      }
+      if (setLoginState){
+        setLoginState(true, isAdmin);
+      }
       localStorage.setItem('token', token); // Store token in localStorage
     } catch (err: any) {
       setError(err.response?.data?.message || 'Something went wrong.');

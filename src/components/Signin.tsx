@@ -21,9 +21,10 @@ const theme = createTheme();
 
 interface SignInProps {
   setLoginState?: (isSignedIn: boolean, isAdmin: boolean) => void;
+  onNavigate?: (location: { pathname: string }) => void;
 }
 
-const SignIn: React.FC<SignInProps> = ({ setLoginState }) => {
+const SignIn: React.FC<SignInProps> = ({ setLoginState, onNavigate }) => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState<string | null>(null);
@@ -44,7 +45,12 @@ const SignIn: React.FC<SignInProps> = ({ setLoginState }) => {
       });
       const { isAdmin, token } = response.data;
       console.log('Signin loggedin: ' + Boolean(token) ? true : false);
-      navigate('/');
+      if (onNavigate) {
+        console.log('Navigate to parant:' + onNavigate);
+        onNavigate({ pathname: '/' });
+      } else {
+        navigate('/');
+      }
       if (setLoginState){
         setLoginState(true, isAdmin);
       } 

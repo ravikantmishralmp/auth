@@ -22,7 +22,7 @@ interface MountOptions {
       }
     }, [location, onNavigate]);
   
-    return <AuthApp setLoginState={setLoginState} />;
+    return <AuthApp setLoginState={setLoginState} onNavigate={onNavigate}/>;
   };
 
 const mount = (

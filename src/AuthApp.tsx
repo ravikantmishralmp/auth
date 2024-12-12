@@ -21,16 +21,17 @@ const theme = createTheme({
 interface AuthAppProps {
  initialEntries?: string[];
  setLoginState?: (isSignedIn: boolean, isAdmin: boolean) => void;
+ onNavigate?: (location: { pathname: string }) => void;
 }
 
-const AuthApp = ({ setLoginState, initialEntries = ['/auth/signin'] }: AuthAppProps) => {
+const AuthApp = ({ setLoginState, initialEntries = ['/auth/signin'], onNavigate}: AuthAppProps) => {
   console.log('AuthApp Props:', { setLoginState }); // Debugging log
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
       <Routes>
-        <Route path="/auth/signin" element={<SignIn setLoginState={setLoginState}/>} />
-        <Route path="/auth/signup" element={<Signup setLoginState={setLoginState}/>} />
+        <Route path="/auth/signin" element={<SignIn setLoginState={setLoginState} onNavigate={onNavigate}/>} />
+        <Route path="/auth/signup" element={<Signup setLoginState={setLoginState} onNavigate={onNavigate}/>} />
         <Route path="/" element={<Navigate to="/auth/signin" replace />} />
         {/* Catch-all for undefined routes */}
         {/* <Route path="*" element={<Navigate to="/auth/signin" replace />} /> */}
